@@ -10,7 +10,7 @@ The Robotic Object Tracking Turret
 ### Project Details:
 TROTT will receive an image input within a predetermined frame, identify the object, and once the object is moved and another image frame is received will then move the laser turret to the center of the object's new position
 
-The purpose of this project is to showcase ideal concepts for Numerical Methods, those being the following:
+The purpose of this project is to showcase concepts from Numerical Methods, those being the following:
 * Errors
 * * Being able to detect the correct object and ignore noise
 * * Only being able to detect objects within the given frame
