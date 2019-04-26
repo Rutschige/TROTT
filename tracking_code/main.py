@@ -6,6 +6,7 @@ import time
 import transforms #this is my custom transforms library, look in cython_stuff/transforms.pyx for the details.
 import math 
 import ctypes
+import os
 pyximport.install()
 
 np.set_printoptions(threshold=sys.maxsize)
@@ -57,21 +58,22 @@ def getNumOfZero(num): #gets the number of zeros needed for zero padding
     ans = (2 ** ans) - num
     return int(ans)
 
-def padImage(image): #returns a zero padded version of the image so that its # of pixels is a power of two which is needed for fft
+def padImage(image): #returns a 255 padded version of the image so that its # of pixels is a power of two which is needed for fft
     ypad = getNumOfZero(image.shape[0])
     xpad = getNumOfZero(image.shape[1])
-    return np.pad(image, ((0,int(ypad)),(0,int(xpad))), 'constant')
+    return np.pad(image, ((0,int(ypad)),(0,int(xpad))), 'constant', constant_values=255)
 
 #Im currently using tracker as the main loop. IDK how our structure is gona be in the end
 def tracker(scaler = 1): #scaler works best with powers of 2
-    originalBall = cv2.imread("ball-gif/1.png",0) 
+    baseDir = os.path.dirname(__file__) #lets us open files from current directory
+    originalBall = cv2.imread(os.path.join(baseDir,"ball-gif/1.png"),0) 
     center = getCenter(originalBall) #finds the initial location of the object you want to track
 
     originalDft = transforms.forward_transform(padImage(cv2.resize(originalBall, (0,0), fx = (1/scaler), fy = (1/scaler)).astype(np.complex))) #computes the dft and scales the image down to desierd size
 
     for i in range(1, 8):
         
-        changeBall = cv2.imread("ball-gif/"+ str(i+1) +".png",0)
+        changeBall = cv2.imread(os.path.join(baseDir,"ball-gif/"+ str(i+1) +".png"),0)
         start = time.time()
         
         changeDft = transforms.forward_transform(padImage(cv2.resize(changeBall, (0,0), fx = (1/scaler), fy = (1/scaler)).astype(np.complex)))
