@@ -1,6 +1,7 @@
 import numpy as np
 import math
 import CropEditor
+import cv2
 def getIndex(pixel, regions):
         for region in regions:
             if pixel in region:
@@ -54,3 +55,11 @@ def padImage(image): #returns a 255 padded version of the image so that its # of
     ypad = getNumOfZero(image.shape[0])
     xpad = getNumOfZero(image.shape[1])
     return np.pad(image, ((0,int(ypad)),(0,int(xpad))), 'constant', constant_values=255)
+
+def getFrame(image):
+    bounds = CropEditor.Crop().crop(image)[0]
+    return bounds
+def resizeImage(image, bounds):
+    image = image[bounds[0][0] : bounds[0][1] , bounds[1][0] : bounds[1][1]]
+    return padImage(image)
+

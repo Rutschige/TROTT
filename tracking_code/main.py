@@ -13,21 +13,34 @@ import imagePrep
 pyximport.install()
 np.set_printoptions(threshold=sys.maxsize)
 
+
+def getImage(cap):
+    # Capture frame-by-frame
+    frame = cap.read()
+
+    # Our operations on the frame come here
+    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+
+    return gray
+
+
 #Im currently using tracker as the main loop. IDK how our structure is gona be in the end
 def tracker(scaler = 1): #scaler works best with powers of 2
     baseDir = os.path.dirname(__file__) #lets us open files from current directory
     originalBall = cv2.imread(os.path.join(baseDir,"ball-gif/1.png"),0)
     #CropEditor.Crop().crop(originalBall) 
+    bounds = imagePrep.getFrame(originalBall)
+    originalBall = imagePrep.resizeImage(originalBall, bounds)
     center = imagePrep.getCenter(originalBall) #finds the initial location of the object you want to track
-
-    originalDft = transforms.forward_transform(imagePrep.padImage(cv2.resize(originalBall, (0,0), fx = (1/scaler), fy = (1/scaler)).astype(np.complex))) #computes the dft and scales the image down to desierd size
+    originalDft = transforms.forward_transform(originalBall[::scaler,::scaler].astype(np.complex_)) #computes the dft and scales the image down to desierd size
 
     for i in range(1, 8):
         
         changeBall = cv2.imread(os.path.join(baseDir,"ball-gif/"+ str(i+1) +".png"),0)
+        changeBall = imagePrep.resizeImage(changeBall, bounds)
         start = time.time()
         
-        changeDft = transforms.forward_transform(imagePrep.padImage(cv2.resize(changeBall, (0,0), fx = (1/scaler), fy = (1/scaler)).astype(np.complex)))
+        changeDft = transforms.forward_transform(changeBall[::scaler,::scaler].astype(np.complex_))
         
         locDft = changeDft * originalDft / abs(changeDft * originalDft) 
 
@@ -36,7 +49,7 @@ def tracker(scaler = 1): #scaler works best with powers of 2
         temp = np.where(location == np.amax(location))
         
         cent = ((temp[0]*scaler)-center[0], (temp[1]*scaler)-center[1])
-
+        print(bounds)
         for y in range(0,6):
             for x in range(0,6):
                 changeBall[(cent[0]+y, cent[1])] = 255
@@ -52,4 +65,4 @@ def tracker(scaler = 1): #scaler works best with powers of 2
 
     cv2.destroyAllWindows()
 
-tracker(4)
+tracker(8)
