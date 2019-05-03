@@ -8,7 +8,13 @@ The Robotic Object Tracking Turret
 * Sebastian Macedonio
 
 ### Project Details:
-TROTT will receive an image input within a predetermined frame, identify the object, and once the object is moved and another image frame is received will then move the laser turret to the center of the object's new position
+TROTT will receive an image input within a predetermined frame, identify the object, and once the object is moved and another image frame is received will then move the laser turret to the center of the object's new position.
+#### Hardware:
+  * 1 x Arduino UNO
+  * 1 x Breadboard
+  * 3 x AC 100 - 240V to DC 5V 2A Power Adapter
+  * 1 x 650nm 6mm 5V 5mW Red Laser Diode
+  * 2 x Metal Gearing Servo Motor
 
 The purpose of this project is to showcase concepts from Numerical Methods, those being the following:
 * Errors
