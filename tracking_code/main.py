@@ -16,7 +16,7 @@ np.set_printoptions(threshold=sys.maxsize)
 
 def getImage(cap):
     # Capture frame-by-frame
-    frame = cap.read()
+    frame = cap.read()[1]
 
     # Our operations on the frame come here
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
