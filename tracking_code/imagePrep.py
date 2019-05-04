@@ -87,7 +87,7 @@ def getNumOfZero(num): #gets the number of zeros needed for zero padding
 def padImage(image): #returns a 255 padded version of the image so that its # of pixels is a power of two which is needed for fft
     ypad = getNumOfZero(image.shape[0])
     xpad = getNumOfZero(image.shape[1])
-    return np.pad(image, ((0,int(ypad)),(0,int(xpad))), 'constant', constant_values=255)
+    return np.pad(image, ((0,int(ypad)),(0,int(xpad))), 'constant', constant_values=image[0,0])
 
 def getFrame(image):
     bounds = CropEditor.Crop().crop(image)[0]
