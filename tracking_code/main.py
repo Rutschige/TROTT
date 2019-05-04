@@ -26,17 +26,21 @@ def getImage(cap):
 
 #Im currently using tracker as the main loop. IDK how our structure is gona be in the end
 def tracker(scaler = 1): #scaler works best with powers of 2
+    cap = cv2.VideoCapture(0) 
     baseDir = os.path.dirname(__file__) #lets us open files from current directory
-    originalBall = cv2.imread(os.path.join(baseDir,"ball-gif/1.png"),0)
+    originalBall = getImage(cap)
     #CropEditor.Crop().crop(originalBall) 
     bounds = imagePrep.getFrame(originalBall)
     originalBall = imagePrep.resizeImage(originalBall, bounds)
     center = imagePrep.getCenter(originalBall) #finds the initial location of the object you want to track
     originalDft = transforms.forward_transform(originalBall[::scaler,::scaler].astype(np.complex_)) #computes the dft and scales the image down to desierd size
 
-    for i in range(1, 8):
+    while True:
         
-        changeBall = cv2.imread(os.path.join(baseDir,"ball-gif/"+ str(i+1) +".png"),0)
+        if cv2.waitKey(1) & 0xFF == ord('q'):
+            break
+
+        changeBall = getImage(cap)
         changeBall = imagePrep.resizeImage(changeBall, bounds)
         start = time.time()
         
@@ -65,4 +69,4 @@ def tracker(scaler = 1): #scaler works best with powers of 2
 
     cv2.destroyAllWindows()
 
-tracker(8)
+tracker(16)

@@ -10,7 +10,7 @@ https://opencv-python-tutroals.readthedocs.io/en/latest/py_tutorials/py_gui/py_i
 import cv2
 from time import sleep
 
-cap = cv2.VideoCapture(0)
+
 def getFrame(cap):
     # Capture frame-by-frame
     frame = cap.read()

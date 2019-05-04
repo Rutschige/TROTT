@@ -2,6 +2,38 @@ import numpy as np
 import math
 import CropEditor
 import cv2
+
+
+
+def compute_histogram(image):
+        hist = [0]*256
+        for row in image:
+            for pixel in row:
+                hist[pixel] += 1
+        return hist
+
+def find_optimal_threshold(hist):
+    total = sum(hist)
+    threshold = 0
+    for val,i in zip(hist, range(0,256)):
+        threshold+= (i*(val/total))
+    return threshold
+
+def binarize(image):
+    hist = compute_histogram(image)
+    threshold = find_optimal_threshold(hist)
+    bin_img = np.zeros(image.shape)
+    for x in range(0, image.shape[0]):
+        for y in range(0, image.shape[1]):
+            if image[x][y] < threshold:
+                bin_img[x][y] = 0
+            else:
+                bin_img[x][y] = 255
+    return bin_img
+
+
+
+
 def getIndex(pixel, regions):
         for region in regions:
             if pixel in region:
@@ -10,6 +42,7 @@ def getIndex(pixel, regions):
 
 def getCenter(originalImage): #Finds circular blobs in the image and returns the center of the largest one
     location,image = CropEditor.Crop().crop(originalImage)
+    image = binarize(image)
     regions = []
     up = -1
     for index, pixel in np.ndenumerate(image):
