@@ -29,7 +29,7 @@ def getImage(cap):
 
 #Im currently using tracker as the main loop. IDK how our structure is gona be in the end
 def tracker(scaler = 1): #scaler works best with powers of 2
-    arduino = serial.Serial('COM3', 9600)
+    arduino = serial.Serial('COM4', 9600)
     cap = cv2.VideoCapture(0) 
 
     calibration=True
@@ -38,7 +38,7 @@ def tracker(scaler = 1): #scaler works best with powers of 2
             calibration = False
         cv2.imshow("Calibration",getImage(cap))
     cv2.destroyAllWindows()
-    arduino.write(bytes(b"stop"))
+    arduino.write(bytes(b"stop\n"))
     
     baseDir = os.path.dirname(__file__) #lets us open files from current directory
     originalBall = getImage(cap)
@@ -81,7 +81,7 @@ def tracker(scaler = 1): #scaler works best with powers of 2
         arduino.write(bytes((str(pan) + '\n').encode()))
         arduino.write(bytes((str(tilt) + '\n').encode()))
         print("waiting for arduino")
-        print(arduino.readline())
+        print(arduino.readline())   
         print("DataRecieved")
         #input()
         print(bounds)
