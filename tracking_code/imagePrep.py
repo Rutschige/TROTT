@@ -29,6 +29,7 @@ def binarize(image):
                 bin_img[x][y] = 0
             else:
                 bin_img[x][y] = 255
+            print(x)
     return bin_img
 
 

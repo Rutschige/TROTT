@@ -78,9 +78,12 @@ def tracker(scaler = 1): #scaler works best with powers of 2
 
         pan,tilt=conversion.convertXAndY(cent[0],cent[1])
         
-        arduino.write(bytes(str(pan).encode()))
-        arduino.write(bytes(str(tilt).encode()))
-        print("ArduinoData:", arduino.read_all)
+        arduino.write(bytes((str(pan) + '\n').encode()))
+        arduino.write(bytes((str(tilt) + '\n').encode()))
+        print("waiting for arduino")
+        print(arduino.readline())
+        print("DataRecieved")
+        #input()
         print(bounds)
         for y in range(0,6):
             for x in range(0,6):
@@ -94,7 +97,7 @@ def tracker(scaler = 1): #scaler works best with powers of 2
         cv2.imshow('Location', changeBall)
         
         cv2.waitKey(1)
-        print("im here")
+        
     cv2.destroyAllWindows()
 
 tracker(16)
