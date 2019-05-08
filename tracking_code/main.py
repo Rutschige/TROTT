@@ -45,11 +45,9 @@ def tracker(scaler = 1): #scaler works best with powers of 2
     #CropEditor.Crop().crop(originalBall) 
     bounds = imagePrep.getFrame(originalBall)
 
-    conversion =Conversion.Conversion
+    conversion =Conversion.Conversion(bounds[1][0] - bounds[1][1],bounds[0][0] - bounds[0][1], 20)
 
-    conversion(conversion,bounds[0],bounds[1])
-
-    conversion.SetMaxPanAndTilt(conversion)
+    conversion.SetMaxPanAndTilt()
 
     originalBall = imagePrep.resizeImage(originalBall, bounds)
     center = imagePrep.getCenter(originalBall) #finds the initial location of the object you want to track
@@ -78,10 +76,10 @@ def tracker(scaler = 1): #scaler works best with powers of 2
         
         cent = ((temp[0]*scaler)-center[0], (temp[1]*scaler)-center[1])
 
-        pan,tilt=conversion.convertXAndY(conversion, cent[1],cent[2])
+        pan,tilt=conversion.convertXAndY(cent[0],cent[1])
         
-        arduino.write(bytes(str(pan)))
-        arduino.write(bytes(str(tilt)))
+        arduino.write(bytes(str(pan).encode()))
+        arduino.write(bytes(str(tilt).encode()))
         print("ArduinoData:", arduino.read_all)
         print(bounds)
         for y in range(0,6):
@@ -96,7 +94,7 @@ def tracker(scaler = 1): #scaler works best with powers of 2
         cv2.imshow('Location', changeBall)
         
         cv2.waitKey(1)
-
+        print("im here")
     cv2.destroyAllWindows()
 
 tracker(16)
