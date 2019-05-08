@@ -5,13 +5,16 @@ import pyximport
 import time 
 import ctypes
 import os
+import serial
 
 import transforms #this is my custom transforms library, look in cython_stuff/transforms.pyx for the details.
 import CropEditor
 import imagePrep
+import Conversion
 
 pyximport.install()
 np.set_printoptions(threshold=sys.maxsize)
+
 
 
 def getImage(cap):
@@ -26,19 +29,40 @@ def getImage(cap):
 
 #Im currently using tracker as the main loop. IDK how our structure is gona be in the end
 def tracker(scaler = 1): #scaler works best with powers of 2
+    arduino = serial.Serial('COM3', 9600)
     cap = cv2.VideoCapture(0) 
+
+    calibration=True
+    while calibration:
+        if cv2.waitKey(1) & 0xFF == ord('q'):
+            calibration = False
+        cv2.imshow("Calibration",getImage(cap))
+    cv2.destroyAllWindows()
+    arduino.write(bytes(b"stop"))
+    
     baseDir = os.path.dirname(__file__) #lets us open files from current directory
     originalBall = getImage(cap)
     #CropEditor.Crop().crop(originalBall) 
     bounds = imagePrep.getFrame(originalBall)
+
+    conversion =Conversion.Conversion
+
+    conversion(conversion,bounds[0],bounds[1])
+
+    conversion.SetMaxPanAndTilt(conversion)
+
     originalBall = imagePrep.resizeImage(originalBall, bounds)
     center = imagePrep.getCenter(originalBall) #finds the initial location of the object you want to track
     originalDft = transforms.forward_transform(originalBall[::scaler,::scaler].astype(np.complex_)) #computes the dft and scales the image down to desierd size
 
-    while True:
+    
+
+
+    running=True
+    while running:
         
         if cv2.waitKey(1) & 0xFF == ord('q'):
-            break
+            running = False
 
         changeBall = getImage(cap)
         changeBall = imagePrep.resizeImage(changeBall, bounds)
@@ -53,6 +77,12 @@ def tracker(scaler = 1): #scaler works best with powers of 2
         temp = np.where(location == np.amax(location))
         
         cent = ((temp[0]*scaler)-center[0], (temp[1]*scaler)-center[1])
+
+        pan,tilt=conversion.convertXAndY(conversion, cent[1],cent[2])
+        
+        arduino.write(bytes(str(pan)))
+        arduino.write(bytes(str(tilt)))
+        print("ArduinoData:", arduino.read_all)
         print(bounds)
         for y in range(0,6):
             for x in range(0,6):
