@@ -74,9 +74,9 @@ def tracker(scaler = 1): #scaler works best with powers of 2
         end = time.time()
         temp = np.where(location == np.amax(location))
         
-        cent = ((temp[0]*scaler)-center[0], (temp[1]*scaler)-center[1]
+        cent = ((temp[0]*scaler)-center[0], (temp[1]*scaler)-center[1])
 
-        pan,tilt=conversion.convertXAndY(cent[0],cent[1])
+        pan, tilt = conversion.convertXAndY(cent[0], cent[1])
         
         arduino.write(bytes((str(pan) + '\n').encode()))
         arduino.write(bytes((str(tilt) + '\n').encode()))

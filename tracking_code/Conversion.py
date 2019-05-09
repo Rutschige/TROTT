@@ -31,12 +31,16 @@ class Conversion:
     def SetMaxPanAndTilt(self):
         frameX = self.FrameWidth/2
         frameY = self.FrameHeight/2
-        self.MaxPan  = math.degrees(math.atan(frameX/self.CameraDistance))
-        self.MaxTilt = math.degrees(math.atan(frameY/self.CameraDistance))
+        self.MaxPan  = math.degrees(math.atan(frameX/self.CameraDistance)) +90
+        self.MaxTilt = math.degrees(math.atan(frameY/self.CameraDistance)) +90
         
     def convertXAndY(self, objX, objY):
         # MaxPan and MaxTilt are multiplied by 2 to get maximum range of movement in both directions
         # Add 90 because the center is (90 deg, 90 deg)
         pan  = ((objX * self.WidthMult) / ( self.FrameWidth  / (2* self.MaxPan) )) + 90
         tilt = ((objY * self.HeightMult) / ( self.FrameHeight / (2* self.MaxTilt))) + 90
-        return pan, tilt
+        return float(pan), float(tilt)
+    def getDegrees(self, objX, objY):
+        pan = math.degrees(math.atan(objX/self.CameraDistance)) + 90
+        tilt = 90 - math.degrees(math.atan(objX/self.CameraDistance))
+        return float(pan), float(tilt)
