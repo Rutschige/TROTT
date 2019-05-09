@@ -41,6 +41,9 @@ class Conversion:
         tilt = ((objY * self.HeightMult) / ( self.FrameHeight / (2* self.MaxTilt))) + 90
         return float(pan), float(tilt)
     def getDegrees(self, objX, objY):
-        pan = math.degrees(math.atan(objX/self.CameraDistance)) + 90
-        tilt = 90 - math.degrees(math.atan(objX/self.CameraDistance))
+        x = (objX * self.WidthMult)
+        y = (objY * self.HeightMult)
+        adjacent = ((x**2) + (self.CameraDistance**2))**.5
+        pan = math.degrees(math.atan(x/self.CameraDistance)) + 90
+        tilt = 90 - math.degrees(math.atan(y/adjacent))
         return float(pan), float(tilt)
