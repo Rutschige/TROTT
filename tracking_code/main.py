@@ -80,6 +80,7 @@ def tracker(scaler = 1): #scaler works best with powers of 2
         
         arduino.write(bytes((str(pan) + '\n').encode()))
         arduino.write(bytes((str(tilt) + '\n').encode()))
+        print("pan", pan, "tilt", tilt)
         print("waiting for arduino")
         print(arduino.readline())   
         print("DataRecieved")

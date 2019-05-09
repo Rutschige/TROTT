@@ -44,8 +44,8 @@ void loop() {
       servoX.write(pan); //writes the value to the pan servo
       while(Serial.available()==0); //waits for the arduino to recieve the next input
       tilt=Serial.readStringUntil('\n').toFloat(); //reads the second input as tilt
-      servoX.write(tilt); //writes the value to the tilt servo
-      Serial.println("continue"); //This string could be anything. The python program just waits for results
+      servoY.write(tilt); //writes the value to the tilt servo
+      Serial.println("continue"); //This string could be anything. The python program just waits for something to be sent so it knows that the arduino has recieved the coordinates
     }
     
 }

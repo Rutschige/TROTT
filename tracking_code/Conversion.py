@@ -15,13 +15,17 @@ class Conversion:
     
     FrameWidth     = 0.00
     FrameHeight    = 0.00
+    WidthMult      = 0.00
+    HeightMult     = 0.00
     CameraDistance = 0.00
     MaxPan         = 0.00  #Maximum Horizontal movement in degrees for one direction
     MaxTilt        = 0.00  #Maximum Vertical movement in degrees for one direction
     
-    def __init__(self, width, height, distance):
+    def __init__(self, width, height, pWidth, pHeight, distance):
         self.FrameWidth      = width
         self.FrameHeight     = height
+        self.WidthMult       = width/pWidth
+        self.HeightMult      = height/pHeight
         self.CameraDistance  = distance
         
     def SetMaxPanAndTilt(self):
@@ -33,6 +37,6 @@ class Conversion:
     def convertXAndY(self, objX, objY):
         # MaxPan and MaxTilt are multiplied by 2 to get maximum range of movement in both directions
         # Add 90 because the center is (90 deg, 90 deg)
-        pan  = (objX / ( self.FrameWidth  / (2* self.MaxPan) )) + 90
-        tilt = (objY / ( self.FrameHeight / (2* self.MaxTilt))) + 90
+        pan  = ((objX * self.WidthMult) / ( self.FrameWidth  / (2* self.MaxPan) )) + 90
+        tilt = ((objY * self.HeightMult) / ( self.FrameHeight / (2* self.MaxTilt))) + 90
         return pan, tilt
