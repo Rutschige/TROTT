@@ -45,7 +45,7 @@ def tracker(scaler = 1): #scaler works best with powers of 2
     #CropEditor.Crop().crop(originalBall) 
     bounds = imagePrep.getFrame(originalBall)
 
-    conversion =Conversion.Conversion(bounds[1][0] - bounds[1][1],bounds[0][0] - bounds[0][1], 20)
+    conversion =Conversion.Conversion(15.0, 12.5, bounds[1][0] - bounds[1][1],bounds[0][0] - bounds[0][1], 20)
 
     conversion.SetMaxPanAndTilt()
 
@@ -74,7 +74,7 @@ def tracker(scaler = 1): #scaler works best with powers of 2
         end = time.time()
         temp = np.where(location == np.amax(location))
         
-        cent = ((temp[0]*scaler)-center[0], (temp[1]*scaler)-center[1])
+        cent = ((temp[0]*scaler)-center[0], (temp[1]*scaler)-center[1]
 
         pan,tilt=conversion.convertXAndY(cent[0],cent[1])
         
