@@ -30,7 +30,7 @@ def getImage(cap):
 #Im currently using tracker as the main loop. IDK how our structure is gona be in the end
 def tracker(scaler = 1): #scaler works best with powers of 2
     arduino = serial.Serial('COM4', 9600)
-    cap = cv2.VideoCapture(0) 
+    cap = cv2.VideoCapture(1) 
 
     calibration=True
     while calibration:
@@ -45,7 +45,7 @@ def tracker(scaler = 1): #scaler works best with powers of 2
     #CropEditor.Crop().crop(originalBall) 
     bounds = imagePrep.getFrame(originalBall)
 
-    conversion =Conversion.Conversion(15.0, 12.5, bounds[1][0] - bounds[1][1],bounds[0][0] - bounds[0][1], 20)
+    conversion =Conversion.Conversion(15.0, 12.5, bounds[1][0] - bounds[1][1],bounds[0][0] - bounds[0][1], 13)
 
     conversion.SetMaxPanAndTilt()
 
@@ -76,7 +76,7 @@ def tracker(scaler = 1): #scaler works best with powers of 2
         
         cent = ((temp[0]*scaler)-center[0], (temp[1]*scaler)-center[1])
 
-        pan, tilt = conversion.convertXAndY(cent[0], cent[1])
+        pan, tilt = conversion.getDegrees(cent[0], cent[1])
         
         arduino.write(bytes((str(pan) + '\n').encode()))
         arduino.write(bytes((str(tilt) + '\n').encode()))
@@ -84,7 +84,7 @@ def tracker(scaler = 1): #scaler works best with powers of 2
         print("waiting for arduino")
         print(arduino.readline())   
         print("DataRecieved")
-        #input()
+        
         print(bounds)
         for y in range(0,6):
             for x in range(0,6):
