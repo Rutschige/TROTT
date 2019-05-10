@@ -18,31 +18,18 @@ np.set_printoptions(threshold=sys.maxsize)
 
 
 def getImage(cap):
-    # Capture frame-by-frame
-    frame = cap.read()[1]
-
-    # Our operations on the frame come here
-    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-
-    return gray
+    baseDir = os.path.dirname(__file__) #lets us open files from current directory
+    location = os.path.join(baseDir, "ball-gif/" +str((cap%8)+1) + ".png")
+    frame = cv2.imread(location, 0)
+    
+    return frame
 
 
 #Im currently using tracker as the main loop. IDK how our structure is gona be in the end
 def tracker(scaler = 1): #scaler works best with powers of 2
-    arduino = serial.Serial('COM4', 9600)
-    cap = cv2.VideoCapture(1) 
-
-    calibration=True
-    while calibration:
-        if cv2.waitKey(1) & 0xFF == ord('q'):
-            calibration = False
-        cv2.imshow("Calibration",getImage(cap))
-    cv2.destroyAllWindows()
-    arduino.write(bytes(b"stop\n"))
-    
-    baseDir = os.path.dirname(__file__) #lets us open files from current directory
+    cap = 0
     originalBall = getImage(cap)
-    #CropEditor.Crop().crop(originalBall) 
+    
     bounds = imagePrep.getFrame(originalBall)
 
     conversion =Conversion.Conversion(15.0, 12.5, bounds[1][0] - bounds[1][1],bounds[0][0] - bounds[0][1], 13)
@@ -52,7 +39,7 @@ def tracker(scaler = 1): #scaler works best with powers of 2
     originalBall = imagePrep.resizeImage(originalBall, bounds)
     center = imagePrep.getCenter(originalBall) #finds the initial location of the object you want to track
     originalDft = transforms.forward_transform(originalBall[::scaler,::scaler].astype(np.complex_)) #computes the dft and scales the image down to desierd size
-
+    cv2.imshow("Initial DFT", cv2.resize(originalDft.real, (0,0), fx=scaler, fy=scaler))
     
 
 
@@ -68,22 +55,23 @@ def tracker(scaler = 1): #scaler works best with powers of 2
         
         changeDft = transforms.forward_transform(changeBall[::scaler,::scaler].astype(np.complex_))
         
+        cv2.imshow("New DFT", cv2.resize(changeDft.real, (0,0), fx=scaler, fy=scaler))
+
         locDft = changeDft * originalDft / abs(changeDft * originalDft) 
 
+        cv2.imshow("Combined DFT", cv2.resize(locDft.real, (0,0), fx=scaler, fy=scaler))
+
         location = transforms.inverse_transform(locDft).real
+
+        
+
         end = time.time()
         temp = np.where(location == np.amax(location))
         
         cent = ((temp[0]*scaler)-center[0], (temp[1]*scaler)-center[1])
 
         pan, tilt = conversion.getDegrees(cent[0], cent[1])
-        
-        arduino.write(bytes((str(pan) + '\n').encode()))
-        arduino.write(bytes((str(tilt) + '\n').encode()))
-        print("pan", pan, "tilt", tilt)
-        print("waiting for arduino")
-        print(arduino.readline())   
-        print("DataRecieved")
+        print("Pan: ", pan, " Tilt: ", tilt)
         
         print(bounds)
         for y in range(0,6):
@@ -97,8 +85,9 @@ def tracker(scaler = 1): #scaler works best with powers of 2
 
         cv2.imshow('Location', changeBall)
         
-        cv2.waitKey(1)
-        
+        cv2.waitKey(100)
+        cap+=1
+
     cv2.destroyAllWindows()
 
 tracker(16)
