@@ -3,6 +3,9 @@ Please note that the commands on the left are used to
 install the proper libraires and also note that most of these
 libraries were installed using anaconda:
 
+link for anaconda:
+https://www.anaconda.com/
+
 import sys -  conda install -c anaconda system 
 import numpy as np - conda install -c anaconda numpy
 import cv2 - conda install -c conda-forge opencv
