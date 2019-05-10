@@ -1,0 +1,24 @@
+The following libraries are needed to run this code
+Please note that the commands on the left are used to
+install the proper libraires and also note that most of these
+libraries were installed using anaconda:
+
+import sys -  conda install -c anaconda system 
+import numpy as np - conda install -c anaconda numpy
+import cv2 - conda install -c conda-forge opencv
+import pyximport - conda install -c anaconda cython
+import time - conda install -c conda-forge time
+import ctypes - conda install -c conda-forge pywin32-ctypes
+import os - conda install -c jmcmurray os
+import serial - python -m pip install pyserial
+import tkinter - conda install -c anaconda tk
+
+Once you have the necesary libraries installed, cd to the project
+directory and run the following command:
+python ./tracking_code/main.py
+
+Once the program starts, use the mouse to select the area where the
+object will be tracked. After that, drag your mouse over the object
+you would like to track. After this, the program will begin active
+tracking. 
+
