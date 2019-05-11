@@ -41,15 +41,15 @@ we could use cython. Inorder for it to work, you must be using Python version 3.
 You can change your version with anaconda using the following command:
 conda install python=3.6.8
 
-import sys -  conda install -c anaconda system 
-import numpy as np - conda install -c anaconda numpy
-import cv2 - conda install -c conda-forge opencv
-import pyximport - conda install -c anaconda cython
-import time - conda install -c conda-forge time
-import ctypes - conda install -c conda-forge pywin32-ctypes
-import os - conda install -c jmcmurray os
-import serial - python -m pip install pyserial
-import tkinter - conda install -c anaconda tk
+* import sys -  conda install -c anaconda system 
+* import numpy as np - conda install -c anaconda numpy
+* import cv2 - conda install -c conda-forge opencv
+* import pyximport - conda install -c anaconda cython
+* import time - conda install -c conda-forge time
+* import ctypes - conda install -c conda-forge pywin32-ctypes
+* import os - conda install -c jmcmurray os
+* import serial - python -m pip install pyserial
+* import tkinter - conda install -c anaconda tk
 
 Once you have the necesary libraries installed, cd to the project
 directory and run the following command:
